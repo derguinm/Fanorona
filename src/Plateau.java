@@ -12,7 +12,7 @@ public class Plateau {
 		c = 9 ;
 		cases = new int [l][c] ;
 	}
-	
+
 	public void iniPlateau () {
 		for(int i = 0; i< l; i++) {
 			for(int j = 0; j< c; j++) {
