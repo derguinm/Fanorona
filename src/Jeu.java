@@ -1,10 +1,7 @@
-import Structures.Iterateur;
-import Structures.IterateurListe;
-import Structures.Sequence;
-import Structures.SequenceListe;
 
+import Structures.Iterateur;
+import Structures.SequenceListe;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class Jeu {
 	Plateau p ;
@@ -18,7 +15,7 @@ public class Jeu {
 	}
 
 	void coup(Point p1, Point d) {
-		SequenceListe<Point> listmangeur=new SequenceListe<>();
+		SequenceListe<Point> listmangeur=null;
 		listmangeur=joueurDoitManger(joueur);
 		if(!listmangeur.estVide())
 		{
@@ -231,5 +228,81 @@ public class Jeu {
 	}
 	void priseApproche(int pion){}
 	void priseEloingnement(int pion){}
-	void coup(int pion){}
+
+	
+	public Plateau getPlateau() {
+		return p ;
+	}
+	
+	public boolean FinJeu() {
+		int p1 = 0, p2 = 0 ;
+		for(int i = 0; i< p.lignes(); i++) {
+			for(int j = 0; j< p.colonnes(); j++) {
+				if(p.aPion1(i,j))
+					p1++ ;
+				else if (p.aPion2(i,j))
+					p2 ++ ;
+			}
+		
+		}
+		return ( p1 == 0 || p2 == 0 ) ;
+	}
+	
+	public void changerJoueur() {
+		if (joueur == 1) {
+			joueur = 2 ;
+			TC = 2 ;
+		}
+		else {
+			joueur = 1 ;
+			TC = 1 ;
+		}
+	}
+	
+	public boolean diagonale(Point p) {
+		if(( (p.x % 2 == 0) && (p.y % 2 == 0) ) || ( (p.x % 2 != 0) && (p.y % 2 != 0) ) )
+			return true ;
+		else	
+			return false ;
+	}
+	
+
+	
+	public void deplacer(Point p1, Point d, int joueur ) {
+		if(joueur == 1) {
+			p.ajoutePion1(p1.x + d.x, p1.y + d.y);
+			p.videCase(p1.x , p1.y);
+			int i = 3 ;
+			Point courant = new Point(p1.x + 2*d.x, p1.y + 2*d.y) ;
+			while( interieure(courant.x, courant.y) && p.aPion2(courant.x, courant.y) ) {
+				p.videCase(courant.x, courant.y) ;
+				courant = new Point(courant.x + d.x, courant.y + d.y) ;
+				i ++;
+			}
+		}
+		else {
+			p.ajoutePion2(p1.x + d.x, p1.y + d.y);
+			p.videCase(p1.x , p1.y);
+			int i = 3 ;
+			Point courant = new Point(p1.x + 2*d.x, p1.y + 2*d.y) ;
+			while(p.aPion1(courant.x, courant.y)) {
+				p.videCase(courant.x, courant.y) ;
+				courant = new Point(p1.x + i*d.x, p1.y + i*d.y) ;
+				i ++;
+			}
+		}
+	}
+	/*
+	public void coup(Point p1, Point d ) {
+		if( ( Math.abs(d.x) + Math.abs(d.y) ) == 1) {
+			if(p.estVide(p1.x + d.x, p1.y + d.y) )
+				deplacer(p, d, joueur );
+		}
+		else {
+			if(diagonale(p1))
+				deplacer(p1, d, joueur );
+		}		
+	}
+
+	 */
 }
