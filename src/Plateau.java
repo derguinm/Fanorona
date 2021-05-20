@@ -77,6 +77,11 @@ public class Plateau {
 		return (cases[l][c] == PION2) ;
 	}
 
+	public boolean aPionX(int x,int l, int c) {
+		return (cases[l][c] == x) ;
+	}
+
+
 	public void affiche(){
 		for(int i = 0; i< l; i++) {
 			for(int j = 0; j< c; j++) {
