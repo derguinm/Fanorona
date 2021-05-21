@@ -22,7 +22,7 @@ public class testFanorona {
 				x2 = sc.nextInt();
 				y2 = sc.nextInt();
 
-				j.coup(new Point(x1,y1), new Point(x2,y2));
+				j.jouer(new Point(x1,y1), new Point(x2,y2));
 				j.getPlateau().affiche();
 				d = sc.nextInt();
 				

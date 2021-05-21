@@ -1,6 +1,8 @@
 
 import Structures.Iterateur;
 import Structures.SequenceListe;
+
+import javax.swing.*;
 import java.awt.*;
 
 public class Jeu {
@@ -14,7 +16,7 @@ public class Jeu {
 		joueur=1;
 	}
 
-	void coup(Point p1, Point d) {
+	void jouer(Point p1, Point d) {
 		SequenceListe<Point> listmangeur=null;
 		listmangeur=joueurDoitManger(joueur);
 		if(!listmangeur.estVide())
@@ -24,22 +26,59 @@ public class Jeu {
 			{
 				Point p=it.prochain();
 				if((p.x==p1.x)&&(p.y==p1.y))
-					deplacer(p1,d);
+				{
+					deplacer(p1,d,1);
+					break;
+				}
 			}
 		}
 		else
-			deplacer(p1,d);//p1 et d doivent être valide
+			deplacer(p1,d,1);//p1 et d doivent être valide
 
 	}
-	void deplacer(Point p,Point d){
+	public void deplacer(Point p,Point d,int type){
 		if(joueur==1){
 			this.p.ajoutePion1(p.x+d.x,p.y+d.y);
 			this.p.videCase(p.x,p.y);
-			
+			int i=2;
+			if(type==0)//par approche
+			{
+				while(interieure(p.x+d.x*i,p.y+d.y*i)&&this.p.aPion2(p.x+d.x*i,p.y+d.y*i))
+				{
+					this.p.videCase(p.x+d.x*i,p.y+d.y*i);
+					i++;
+				}
+			}
+			else// par eloignement
+			{
+				while(this.p.aPion2(p.x+d.x*i+1,p.y+d.y*i+1))
+				{
+					this.p.videCase(p.x-d.x*i,p.y-d.y*i);
+					i++;
+				}
+			}
 		}
 		else
 		{
-
+			this.p.ajoutePion2(p.x+d.x,p.y+d.y);
+			this.p.videCase(p.x,p.y);
+			int i=1;
+			if(type==0)//par approche
+			{
+				while(this.p.aPion1(p.x+d.x*i+1,p.y+d.y*i+1))
+				{
+					this.p.videCase(p.x+d.x*i+1,p.y+d.y*i+1);
+					i++;
+				}
+			}
+			else// par eloignement
+			{
+				while(this.p.aPion1(p.x+d.x*i+1,p.y+d.y*i+1))
+				{
+					this.p.videCase(p.x-d.x*i,p.y-d.y*i);
+					i++;
+				}
+			}
 		}
 	}
 	//la fonction retourne la liste des pions mangueur du joueur
@@ -268,7 +307,7 @@ public class Jeu {
 	
 
 	
-	public void deplacer(Point p1, Point d, int joueur ) {
+	public void deplacer(Point p1, Point d) {
 		if(joueur == 1) {
 			p.ajoutePion1(p1.x + d.x, p1.y + d.y);
 			p.videCase(p1.x , p1.y);
