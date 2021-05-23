@@ -26,14 +26,12 @@
  */
 package Structures ;
 
-public interface Sequence<E> {
-	void insereQueue(E element);
+class Maillon<E> {
+	E element;
+	Maillon<E> suivant;
 
-	void insereTete(E element);
-
-	E extraitTete();
-
-	boolean estVide();
-
-	Iterateur<E> iterateur();
+	Maillon(E element, Maillon<E> suivant) {
+		this.element = element;
+		this.suivant = suivant;
+	}
 }

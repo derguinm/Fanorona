@@ -1,7 +1,7 @@
+import java.awt.Point;
+
 import Structures.Iterateur;
 import Structures.SequenceListe;
-
-import java.awt.*;
 
 public class Coup {
     SequenceListe<Point> points;

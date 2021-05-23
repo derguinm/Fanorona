@@ -80,7 +80,10 @@ public class Plateau {
 	public boolean aPionX(int x,int l, int c) {
 		return (cases[l][c] == x) ;
 	}
-
+	
+	public boolean aPionAdversaire(int x,int l, int c) {
+		return (!( cases[l][c] == x ) && !estVide(l,c)) ;
+	}
 
 	public void affiche(){
 		for(int i = 0; i< l; i++) {
