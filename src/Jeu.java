@@ -20,6 +20,68 @@ public class Jeu {
 		return joueur ;
 	}
 	
+	Point direction(Point p1, Point p2) {
+		return new Point(p2.x-p1.x, p2.y-p1.y ) ;
+	}
+	
+	boolean trouverPoint(Point p1, SequenceListe<Point> s) {
+		Iterateur<Point> it = s.iterateur() ;
+		while(it.aProchain())
+		{
+			Point p = it.prochain();
+			if((p.x == p1.x)&&(p.y == p1.y))
+				return true ;
+		}
+		return false ;
+	}
+	
+	int coups(Point p1, SequenceListe<Point> s, int etape ) {
+		if( ( !s.estVide() && !trouverPoint(p1,s) ) || s.estVide() ) {
+			if( etape == 0 ) {
+				s.insereTete(p1) ;
+				etape++ ;
+			}
+			else if ( etape == 1 ) {
+				Iterateur<Point> it = s.iterateur() ;
+				Point p = it.prochain() ;
+				Point d = direction(p, p1) ;
+				if(MangerDirection(joueur,p1.x,p1.y,d,0) && !MangerDirection(joueur,p1.x,p1.y,d,1) ) {
+					deplacer(p1, d, 0);
+					s.insereTete(p1) ;
+					etape = 1 ;
+				}
+					
+				else if( !MangerDirection(joueur,p1.x,p1.y,d,0) && MangerDirection(joueur,p1.x,p1.y,d,1) ) {
+					deplacer(p1, d, 1);
+					s.insereTete(p1) ;
+					etape = 1 ;
+				}
+					
+				else if( MangerDirection(joueur,p1.x,p1.y,d,0) && MangerDirection(joueur,p1.x,p1.y,d,1) ) {
+					s.insereTete(p1) ;
+					etape ++ ;
+				}
+					
+			}
+			else if ( etape == 2 ) {
+				Iterateur<Point> it = s.iterateur() ;
+				Point p_1 = it.prochain() ;
+				Point p_2 = it.prochain() ;
+				
+				Point d = direction(p_1, p_2) ;
+				Point d1 = direction(p_1, p1) ;
+				d1 = new Point(d1.x%2, d1.y%2);
+				if(d.x == d1.x && d.y == d1.y )
+					deplacer(p1, d, 0);
+				else if(d.x == -d1.x && d.y == -d1.y )
+					deplacer(p1, d, 1);
+				etape = 1 ;
+			}
+		}
+		//System.out.println(" if etape" + etape);	
+		return etape ;
+	}
+	
 	void jouer(Point p1, Point d) {
 		if(!MangerDirection(joueur,p1.x,p1.y,d,0) )
 			MangerDirection(joueur,p1.x,p1.y,d,1) ;
@@ -131,12 +193,12 @@ public class Jeu {
 		
 		if(interieure(prochainP.x, prochainP.y) && p.estVide(l + d.x, c + d.y) && p.aPionAdversaire(pion, prochainP.x, prochainP.y) ) {
 			if( ( Math.abs(d.x) + Math.abs(d.y) ) == 1) {
-				deplacer(new Point(l,c), d, type);
+				//deplacer(new Point(l,c), d, type);
 				return true;
 			}
 			else {
 				if(l%2 == c%2) {
-					deplacer(new Point(l,c), d, type);
+					//deplacer(new Point(l,c), d, type);
 					return true;
 				}
 			}

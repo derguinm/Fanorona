@@ -22,7 +22,7 @@ public class Plateau {
 					ajoutePion2(i,j) ;
 			}
 		}
-		int j = 0, pion = PION1 ;
+		int j = 0, pion = PION2 ;
 		while(j < c) {
 			if(j != 4) {
 				if(pion == PION1 ) {
