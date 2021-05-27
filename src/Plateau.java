@@ -1,5 +1,6 @@
+import java.awt.*;
 
-public class Plateau {
+public class Plateau implements Cloneable {
 
 	static final int VIDE = 0;
 	static final int PION1 = 1;
@@ -12,7 +13,9 @@ public class Plateau {
 		c = 9;
 		cases = new int[l][c];
 	}
-
+	public Plateau clone() throws CloneNotSupportedException {
+		return (Plateau) super.clone();
+	}
 	public void iniPlateau() {
 		for (int i = 0; i < l; i++) {
 			for (int j = 0; j < c; j++) {
@@ -38,6 +41,7 @@ public class Plateau {
 		}
 
 	}
+	public void jouer(Coup c){}
 
 	public void videCase(int i, int j) {
 		cases[i][j] = VIDE;
@@ -97,4 +101,14 @@ public class Plateau {
 		}
 		System.out.println();
 	}
+
+	Point direction(Point p1, Point p2) {
+		return new Point(p2.x - p1.x, p2.y - p1.y);
+	}
+
+
+
+
+
+
 }

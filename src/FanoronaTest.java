@@ -7,18 +7,19 @@ import java.awt.*;
 public class FanoronaTest {
 	public static void main(String[] args) {
 		int x1, x2, y1, y2, d = 0;
-		// Jeu j = new Jeu() ;
+		Jeu j = new Jeu() ;
 		Coup c = new Coup();
-		c.j.getPlateau().iniPlateau();
-		c.j.affiche();
+		j.getPlateau().iniPlateau();
+		j.affiche();
 
 		Scanner sc = new Scanner(System.in);
 		Point p1;
 		// SequenceListe<Point> s = new SequenceListe<>() ;
 		int etape = 0, k = 0;
-
-		while (!c.j.FinJeu()) {
+		int tuepartie=0;
+		while (!j.FinJeu() && tuepartie==0) {
 			k = 0;
+			Coup coup_courant=new Coup();
 			while (d == 0) {
 				System.out.println(" enter x y");
 				x1 = sc.nextInt();
@@ -31,12 +32,12 @@ public class FanoronaTest {
 
 				p1 = new Point(x1, y1);
 				System.out.println(" etape avant est : " + etape);
-				etape = c.coups(p1, etape);
+				etape = j.jouercoup(p1, etape,c);
 				System.out.println(" etape apres est : " + etape);
 				System.out.println(" ma liste est : " + c.s);
 
 				if (k == 1) {
-					c.j.affiche();
+					j.affiche();
 
 					if (etape == 1) {
 						System.out.println(" enter d: ");
@@ -46,15 +47,26 @@ public class FanoronaTest {
 					k = 0;
 				}
 				k++;
-
+				coup_courant.ajouterPoint(p1);
 			}
 			c.videList();
 			// s = new SequenceListe<>() ;
+
+
 			etape = 0;
 			d = 0;
-			c.j.changerJoueur();
+			try {
+				j.hi.ajouterConfiguration(j.getPlateau().clone());
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+			j.changerJoueur();
+			System.out.println("tuepartie:");
+			tuepartie=sc.nextInt();
 		}
 		sc.close();
+		j.annulerCoup();
+		j.p.a
 
 	}
 

@@ -28,7 +28,7 @@
 package Structures ;
 import java.util.Random;
 
-public class TestFAP {
+class TestFAP {
 	public static void main(String[] args) {
 		int min = 0;
 		int[] count = new int[100];

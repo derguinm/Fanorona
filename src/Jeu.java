@@ -8,16 +8,32 @@ import java.awt.*;
 public class Jeu {
 	Plateau p;
 	int joueur;
-	int TC;
-
+	public Historique hi;
+	boolean IA;
 	Jeu() {
+		hi=new Historique();
 		p = new Plateau();
 		p.iniPlateau();
+
+		try {
+			hi.ajouterConfiguration(p);
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
 		joueur = 1;
+		IA=false;
 	}
 
 	public int joueur() {
 		return joueur;
+	}
+
+	public void ajoutConfiguration(){
+		try {
+			hi.tete.insereTete((Plateau)p.clone());
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	Point direction(Point p1, Point p2) {
@@ -79,6 +95,83 @@ public class Jeu {
 		return etape;
 	}
 
+	int jouercoup(Point p1, int etape,Coup c) {
+		SequenceListe<Point> s=c.s;
+
+		if ((!s.estVide() && !c.trouverPoint(p1)) || s.estVide()) {
+			if (etape == 0) {
+				s.insereTete(p1);
+				etape++;
+			} else if (etape == 1) {
+				System.out.println(" enter etape_1 : ");
+				Iterateur<Point> it = s.iterateur();
+				Point p = it.prochain();
+				Point d = direction(p, p1);
+				System.out.println(" enter etape_1_d : " + d);
+
+				System.out.println(" 0 et 1" + MangerDirection(joueur(), p.x, p.y, d, 0) + " , "
+						+ MangerDirection(joueur(), p.x, p.y, d, 1));
+
+				if (MangerDirection(joueur(), p.x, p.y, d, 0) && !MangerDirection(joueur(), p.x, p.y, d, 1)) {
+					System.out.println(" enter etape_1_if_1 : ");
+					deplacer(p, d, 0);
+					s.insereTete(p1);
+					etape = 1;
+				}
+
+				else if (!MangerDirection(joueur(), p.x, p.y, d, 0)
+						&& MangerDirection(joueur(), p.x, p.y, d, 1)) {
+					System.out.println(" enter etape_1_if_2 : ");
+					deplacer(p, d, 1);
+					s.insereTete(p1);
+					etape = 1;
+				}
+
+				else if (MangerDirection(joueur(), p.x, p.y, d, 0)
+						&& MangerDirection(joueur(), p.x, p.y, d, 1)) {
+					System.out.println(" enter etape_1_if_3 : ");
+					s.insereTete(p1);
+					etape++;
+				}
+
+			} else if (etape == 2) {
+				System.out.println(" enter etape_2 : ");
+
+				Iterateur<Point> it = s.iterateur();
+				Point p_2 = it.prochain();
+				Point p_1 = it.prochain();
+
+				Point d = direction(p_1, p_2);
+				Point d1 = direction(p_1, p1);
+
+				System.out.println(" d : " + d);
+				System.out.println(" d1 : " + d1);
+
+				d1 = new Point(arrondir(d1.x), arrondir(d1.y));
+				System.out.println(" new d1 : " + d1);
+
+				if (d.x == d1.x && d.y == d1.y)
+					deplacer(p_1, d, 0);
+				else if (d.x == -d1.x && d.y == -d1.y)
+					deplacer(p_1, d, 1);
+				etape = 1;
+			}
+			c.ajouterPoint(p1);
+		}
+		return etape;
+	}
+	int arrondir(int a) {
+		int b = 0;
+		if (a == 0)
+			b = 0;
+		else if (a > 0)
+			b = 1;
+		else if (a < 0)
+			b = -1;
+		return b;
+	}
+	
+	
 	void jouer(Point p1, Point d) {
 		if (!MangerDirection(joueur, p1.x, p1.y, d, 0))
 			MangerDirection(joueur, p1.x, p1.y, d, 1);
@@ -347,10 +440,8 @@ public class Jeu {
 	public void changerJoueur() {
 		if (joueur == 1) {
 			joueur = 2;
-			TC = 2;
 		} else {
 			joueur = 1;
-			TC = 1;
 		}
 	}
 
@@ -391,6 +482,11 @@ public class Jeu {
 		else
 			System.out.println("joueur ::: *");
 		this.p.affiche();
+	}
+
+	public void annulerCoup(){
+		p=hi.annulerCoup();
+
 	}
 	/*
 	 * public void coup(Point p1, Point d ) { if( ( Math.abs(d.x) + Math.abs(d.y) )

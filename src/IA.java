@@ -1,6 +1,8 @@
+import java.awt.*;
+
 class couple {
 	int valeur ;
-	Point p
+	Point p;
 }
 
 
@@ -9,21 +11,22 @@ class couple {
 public class IA {
 	
 	Coup cp ;
-	Plateau PL ;
+	Jeu j;
 	
-	IA(){
+	IA(Jeu j){
 		cp = new Coup() ;
-		Plateau PL = cp.j.getPlateau();
+		this.j = j;
 	}
 
 	int cmpPions(int joueur) {
+		Plateau PL=j.getPlateau();
 		int l = PL.lignes() ;
 		int c  = PL.colonnes();
 		int cmp = 0 ;
  		
 		for(int i = 0; i< l; i++) {
 			for(int j = 0; j< c ; j++) {
-				if( cp.j.getPlateau().aPionX(joueur, i, j) )
+				if( PL.aPionX(joueur, i, j) )
 					cmp ++ ;
 			}
 		}
@@ -39,7 +42,7 @@ public class IA {
 	
 	int minMax(int horizon, boolean maxJoueur, int joueur) {
 		
-		if( horizon == 0 || cp.j.FinJeu() )
+		if( horizon == 0 || j.FinJeu() )
 			return evaluation(joueur) ;
 		else
 		

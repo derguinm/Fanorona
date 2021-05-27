@@ -1,14 +1,15 @@
 import java.awt.Point;
 
+import Structures.Iterateur;
 import Structures.SequenceListe;
 
 public class Historique  {
-	SequenceListe<Coup> tete ;
-	SequenceListe<Coup> queue ;
+	SequenceListe<Plateau> tete ;
+	SequenceListe<Plateau> queue ;
 	
 	Historique(){
-		tete = new SequenceListe<Coup>() ;
-		queue = new SequenceListe<Coup>() ; 
+		tete = new SequenceListe<Plateau>() ;
+		queue = new SequenceListe<Plateau>() ;
 	}
 	
 	boolean aProchain () {
@@ -19,21 +20,34 @@ public class Historique  {
 	
 	}
 	
-	Coup prochain() {
+	Plateau prochain() {
 			return queue.extraitTete() ;
 	}
 	
-	Coup precedent( ) {
+	Plateau precedent( ) {
 		return tete.extraitTete() ;
 	 }
 	 
-	void ajouterCoup( Coup c ) throws CloneNotSupportedException {
-		tete.insereTete( (Coup) c.clone() );
-		queue = new SequenceListe<Coup>() ;
+	void ajouterConfiguration( Plateau c ) throws CloneNotSupportedException {
+		tete.insereTete( (Plateau) c.clone() );
+		queue = new SequenceListe<Plateau>() ;
 	}
-	
-	void annulerDeplace() {
-		Coup 
+	Plateau retablirCoup(){
+		if(!queue.estVide()){
+			Plateau courant=queue.extraitTete();
+			tete.insereTete(courant);
+			return courant;
+		}
+			return null;
+	}
+
+	Plateau annulerCoup() {
+		if(!tete.estVide()){
+			Plateau movannulee=tete.extraitTete();
+			queue.insereTete(movannulee);
+			return tete.sommet();
+		}
+			return null;
 	}
 	
 }

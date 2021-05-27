@@ -3,19 +3,13 @@ import java.awt.Point;
 import Structures.Iterateur;
 import Structures.SequenceListe;
 
-public class Coup implements Cloneable {
-	Jeu j;
+public class Coup  {
 	SequenceListe<Point> s;
-	SequenceListe<Point> spl ;
 
 	Coup() {
-		j = new Jeu();
 		s = new SequenceListe<>();
 	}
-	
-	public Object clone() throws CloneNotSupportedException {
-		return super.clone() ;
-	}
+
 
 	void videList() {
 		s = new SequenceListe<>();
@@ -35,80 +29,12 @@ public class Coup implements Cloneable {
 		return false;
 	}
 
-	int arrondir(int a) {
-		int b = 0;
-		if (a == 0)
-			b = 0;
-		else if (a > 0)
-			b = 1;
-		else if (a < 0)
-			b = -1;
-		return b;
+
+
+	void ajouterPoint(Point p){
+		s.insereQueue(p);
 	}
 
-	int coups(Point p1, int etape) {
-		if ((!s.estVide() && !trouverPoint(p1)) || s.estVide()) {
-			if (etape == 0) {
-				s.insereTete(p1);
-				etape++;
-			} else if (etape == 1) {
-				System.out.println(" enter etape_1 : ");
-				Iterateur<Point> it = s.iterateur();
-				Point p = it.prochain();
-				Point d = direction(p, p1);
-				System.out.println(" enter etape_1_d : " + d);
-
-				System.out.println(" 0 et 1" + j.MangerDirection(j.joueur(), p.x, p.y, d, 0) + " , "
-						+ j.MangerDirection(j.joueur(), p.x, p.y, d, 1));
-
-				if (j.MangerDirection(j.joueur(), p.x, p.y, d, 0) && !j.MangerDirection(j.joueur(), p.x, p.y, d, 1)) {
-					System.out.println(" enter etape_1_if_1 : ");
-					j.deplacer(p, d, 0);
-					s.insereTete(p1);
-					etape = 1;
-				}
-
-				else if (!j.MangerDirection(j.joueur(), p.x, p.y, d, 0)
-						&& j.MangerDirection(j.joueur(), p.x, p.y, d, 1)) {
-					System.out.println(" enter etape_1_if_2 : ");
-					j.deplacer(p, d, 1);
-					s.insereTete(p1);
-					etape = 1;
-				}
-
-				else if (j.MangerDirection(j.joueur(), p.x, p.y, d, 0)
-						&& j.MangerDirection(j.joueur(), p.x, p.y, d, 1)) {
-					System.out.println(" enter etape_1_if_3 : ");
-					s.insereTete(p1);
-					etape++;
-				}
-
-			} else if (etape == 2) {
-				System.out.println(" enter etape_2 : ");
-
-				Iterateur<Point> it = s.iterateur();
-				Point p_2 = it.prochain();
-				Point p_1 = it.prochain();
-
-				Point d = direction(p_1, p_2);
-				Point d1 = direction(p_1, p1);
-
-				System.out.println(" d : " + d);
-				System.out.println(" d1 : " + d1);
-
-				d1 = new Point(arrondir(d1.x), arrondir(d1.y));
-				System.out.println(" new d1 : " + d1);
-
-				if (d.x == d1.x && d.y == d1.y)
-					j.deplacer(p_1, d, 0);
-				else if (d.x == -d1.x && d.y == -d1.y)
-					j.deplacer(p_1, d, 1);
-				etape = 1;
-			}
-		}
-
-		return etape;
-	}
 
 	/*
 	 * public Coup(SequenceListe<Point> point, SequenceListe<Point> direction, int

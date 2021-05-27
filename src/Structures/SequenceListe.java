@@ -51,7 +51,9 @@ public class SequenceListe<E> implements Sequence<E> {
 			tete = m;
 		}
 	}
-
+	public E sommet(){
+		return tete.element;
+	}
 	@Override
 	public E extraitTete() {
 		E resultat;
