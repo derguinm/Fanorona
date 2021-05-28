@@ -96,11 +96,11 @@ public class Jeu {
 	}
 
 	int jouercoup(Point p1, int etape,Coup c) {
-		SequenceListe<Point> s=c.s;//point de passage
-		SequenceListe<SequenceListe<Point>> pp=c.pionspris;//liste de pions pris pour chaque mouvement du pion mangeur.
-		SequenceListe<Point> res=new SequenceListe<>();//pions pris
-		System.out.println("liste pour chaque mouvement"+pp);
-		if ((!s.estVide() && !c.trouverPoint(p1)) || s.estVide()) {
+		SequenceListe<Point> s = c.s;//point de passage
+		SequenceListe<SequenceListe<Point>> pp = c.pionspris;//liste de pions pris pour chaque mouvement du pion mangeur.
+		SequenceListe<Point> res=new SequenceListe<>() ;  //pions pris
+		System.out.println("liste pour chaque mouvement" + pp ) ;
+		if ((!s.estVide() && !c.trouverPoint(p1)) || s.estVide() ) {
 			if (etape == 0) {
 				s.insereTete(p1);
 				etape++;
@@ -113,28 +113,36 @@ public class Jeu {
 
 				//System.out.println(" 0 et 1" + MangerDirection(joueur(), p.x, p.y, d, 0) + " , "
 				//		+ MangerDirection(joueur(), p.x, p.y, d, 1));
-
-				if (MangerDirection(joueur(), p.x, p.y, d, 0) && !MangerDirection(joueur(), p.x, p.y, d, 1)) {
-				//	System.out.println(" enter etape_1_if_1 : ");
-					res=deplacer3(p, d, 0);
-					s.insereTete(p1);
-					etape = 1;
+				if( joueurDoitManger().estVide() ) {
+					System.out.println("  if pion mangeur : ");
+					deplacer(p, d, 0);
 				}
-
-				else if (!MangerDirection(joueur(), p.x, p.y, d, 0)
-						&& MangerDirection(joueur(), p.x, p.y, d, 1)) {
-				//	System.out.println(" enter etape_1_if_2 : ");
-					res=deplacer3(p, d, 1);
-					s.insereTete(p1);
-					etape = 1;
+					
+				else {
+					
+					if (MangerDirection(joueur(), p.x, p.y, d, 0) && !MangerDirection(joueur(), p.x, p.y, d, 1)) {
+					//	System.out.println(" enter etape_1_if_1 : ");
+						res=deplacer3(p, d, 0);
+						s.insereTete(p1);
+						etape = 1;
+					}
+	
+					else if (!MangerDirection(joueur(), p.x, p.y, d, 0)
+							&& MangerDirection(joueur(), p.x, p.y, d, 1)) {
+					//	System.out.println(" enter etape_1_if_2 : ");
+						res=deplacer3(p, d, 1);
+						s.insereTete(p1);
+						etape = 1;
+					}
+	
+					else if (MangerDirection(joueur(), p.x, p.y, d, 0)
+							&& MangerDirection(joueur(), p.x, p.y, d, 1)) {
+					//	System.out.println(" enter etape_1_if_3 : ");
+						s.insereTete(p1);
+						etape++;
+					}
 				}
-
-				else if (MangerDirection(joueur(), p.x, p.y, d, 0)
-						&& MangerDirection(joueur(), p.x, p.y, d, 1)) {
-				//	System.out.println(" enter etape_1_if_3 : ");
-					s.insereTete(p1);
-					etape++;
-				}
+				
 
 			} else if (etape == 2) {
 				System.out.println(" enter etape_2 : ");
@@ -262,7 +270,7 @@ public class Jeu {
 		 * while(it.aProchain()) { Point p=it.prochain(); if((p.x==p1.x)&&(p.y==p1.y)) {
 		 * if( MangerDirection(joueur,p1.x,p1.y,d,1) ) { break; }
 		 * 
-		 * } } } else deplacer(p1,d,1);//p1 et d doivent être valide
+		 * } } } else deplacer(p1,d,1);//p1 et d doivent Ãªtre valide
 		 */
 
 	}
@@ -310,22 +318,32 @@ public class Jeu {
 	}
 
 	// la fonction retourne la liste des pions mangueur du joueur
-	SequenceListe<Point> joueurDoitManger(int joueur) {
+	SequenceListe<Point> joueurDoitManger() {
 		SequenceListe<Point> LPionAManger = new SequenceListe<>();
 		for (int i = 0; i < p.lignes(); i++) {
 			for (int j = 0; j < p.colonnes(); j++) {
-				if (p.aPionX(joueur, i, j))
-					if (pionMangeur(joueur, i, j))
-						LPionAManger.insereTete(new Point(i, j));
-
+				
+				for (int k = -1; k < 2; k++) {
+					for (int l = -1; l < 2; l++) {
+						
+						if (!(k == 0 && l == 0) && p.aPionX(joueur, i, j) ){
+							if( MangerDirection(joueur(),i, j, new Point(k,l),0) 
+								|| MangerDirection(joueur(), i, j, new Point(k,l),1) ) {
+									LPionAManger.insereTete(new Point(i,j)) ;
+							}
+							
+					
+						}
+					}
+				}
 			}
 		}
 		return LPionAManger;
 	}
 
-	// vérifie si le pion la position (l,c) est un pion mangeur;
+	// vÃ©rifie si le pion la position (l,c) est un pion mangeur;
 	boolean pionMangeur(int pion, int l, int c) {
-		// vérifie au niveau de la verticale et l'horizentale
+		// vÃ©rifie au niveau de la verticale et l'horizentale
 		SequenceListe<SequenceListe<Point>> listpionmange = new SequenceListe<>();
 
 		SequenceListe<SequenceListe<Point>> lma = pionMangeurApproche(pion, l, c);
@@ -344,7 +362,7 @@ public class Jeu {
 		} else // par eloignement
 			prochainP = new Point(l - d.x, c - d.y);
 
-		if (interieure(prochainP.x, prochainP.y) && p.estVide(l + d.x, c + d.y)
+		if (interieure(prochainP.x, prochainP.y) &&interieure(l + d.x, c + d.y) && p.estVide(l + d.x, c + d.y)
 				&& p.aPionAdversaire(pion, prochainP.x, prochainP.y)) {
 			if ((Math.abs(d.x) + Math.abs(d.y)) == 1) {
 				// deplacer(new Point(l,c), d, type);
@@ -369,7 +387,7 @@ public class Jeu {
 		SequenceListe<Point> list = new SequenceListe<>();
 		SequenceListe<SequenceListe<Point>> tuple = new SequenceListe<>();
 
-		// vérifie au niveau de la verticale et l'horizentale
+		// vÃ©rifie au niveau de la verticale et l'horizentale
 		/*
 		 * if((c+2<p.colonnes())&&(p.estVide(l,c+1))&&(p.aPionX(pionamanger,l,c+2)))//
 		 * Est { list.insereTete(new Point(0,1)); list.insereTete(new Point(l,c+2));
@@ -384,8 +402,8 @@ public class Jeu {
 		 * if((l-2<0)&&(p.estVide(l+1,c))&&(p.aPionX(pionamanger,l-2,c)))//Nord
 		 * 
 		 * list=new SequenceListe<>(); list.insereTete(new Point(1,0));
-		 * list.insereTete(new Point(l-2,c)); tuple.insereTete(list); //vérifie au
-		 * niveau des deux diagonales if(l%2==c%2)//vérifie que le mouvement en
+		 * list.insereTete(new Point(l-2,c)); tuple.insereTete(list); //vÃ©rifie au
+		 * niveau des deux diagonales if(l%2==c%2)//vÃ©rifie que le mouvement en
 		 * diagonale est possible a partir de la case (l,c) { if( (c+2<p.colonnes()) &&
 		 * (l+2<p.lignes()) && (p.estVide(l+1,c+1)) && (p.aPionX(pionamanger,l+2,c+2))
 		 * )//SudEst list.insereTete(new Point(l+2,c+2)); else if( (c-2>0) &&
@@ -444,7 +462,7 @@ public class Jeu {
 		SequenceListe<SequenceListe<Point>> tuple = new SequenceListe<>();
 		/*
 		 * if( (l+1!=p.lignes()) && (l!=0) && (c+1!=p.colonnes()) && ( c!=0 ) ){//
-		 * vérifie si le pion choisis n'est pas dans l'extremité du plateau //vérifie
+		 * vÃ©rifie si le pion choisis n'est pas dans l'extremitÃ© du plateau //vÃ©rifie
 		 * au niveau de la verticale et l'horizentale if( (p.estVide(l,c+1)) &&
 		 * (p.aPionX(pionamanger,l,c-1)) )//Est list.insereTete(new Point(l,c-1)); else
 		 * if( (p.estVide(l,c-1)) && (p.aPionX(pionamanger,l,c+1)) )//Ouest
