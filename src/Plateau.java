@@ -14,7 +14,15 @@ public class Plateau implements Cloneable {
 		cases = new int[l][c];
 	}
 	public Plateau clone() throws CloneNotSupportedException {
-		return (Plateau) super.clone();
+		Plateau p=new Plateau();
+		p.c=this.c;
+		p.l=this.l;
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 9; j++) {
+				p.cases[i][j]=this.cases[i][j];
+			}
+		}
+		return p;
 	}
 	public void iniPlateau() {
 		for (int i = 0; i < l; i++) {
@@ -107,8 +115,12 @@ public class Plateau implements Cloneable {
 	}
 
 
-
-
-
-
+	public void ajoutePionX(int joueur,int i, int i1) {
+		if(joueur==1){
+			ajoutePion1(i,i1);
+		}
+		else{
+			ajoutePion2(i,i1);
+		}
+	}
 }
