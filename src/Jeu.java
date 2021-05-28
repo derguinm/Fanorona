@@ -96,8 +96,10 @@ public class Jeu {
 	}
 
 	int jouercoup(Point p1, int etape,Coup c) {
-		SequenceListe<Point> s=c.s;
-
+		SequenceListe<Point> s=c.s;//point de passage
+		SequenceListe<SequenceListe<Point>> pp=c.pionspris;//liste de pions pris pour chaque mouvement du pion mangeur.
+		SequenceListe<Point> res=new SequenceListe<>();//pions pris
+		System.out.println("liste pour chaque mouvement"+pp);
 		if ((!s.estVide() && !c.trouverPoint(p1)) || s.estVide()) {
 			if (etape == 0) {
 				s.insereTete(p1);
@@ -107,29 +109,29 @@ public class Jeu {
 				Iterateur<Point> it = s.iterateur();
 				Point p = it.prochain();
 				Point d = direction(p, p1);
-				System.out.println(" enter etape_1_d : " + d);
+				//System.out.println(" enter etape_1_d : " + d);
 
-				System.out.println(" 0 et 1" + MangerDirection(joueur(), p.x, p.y, d, 0) + " , "
-						+ MangerDirection(joueur(), p.x, p.y, d, 1));
+				//System.out.println(" 0 et 1" + MangerDirection(joueur(), p.x, p.y, d, 0) + " , "
+				//		+ MangerDirection(joueur(), p.x, p.y, d, 1));
 
 				if (MangerDirection(joueur(), p.x, p.y, d, 0) && !MangerDirection(joueur(), p.x, p.y, d, 1)) {
-					System.out.println(" enter etape_1_if_1 : ");
-					deplacer(p, d, 0);
+				//	System.out.println(" enter etape_1_if_1 : ");
+					res=deplacer3(p, d, 0);
 					s.insereTete(p1);
 					etape = 1;
 				}
 
 				else if (!MangerDirection(joueur(), p.x, p.y, d, 0)
 						&& MangerDirection(joueur(), p.x, p.y, d, 1)) {
-					System.out.println(" enter etape_1_if_2 : ");
-					deplacer(p, d, 1);
+				//	System.out.println(" enter etape_1_if_2 : ");
+					res=deplacer3(p, d, 1);
 					s.insereTete(p1);
 					etape = 1;
 				}
 
 				else if (MangerDirection(joueur(), p.x, p.y, d, 0)
 						&& MangerDirection(joueur(), p.x, p.y, d, 1)) {
-					System.out.println(" enter etape_1_if_3 : ");
+				//	System.out.println(" enter etape_1_if_3 : ");
 					s.insereTete(p1);
 					etape++;
 				}
@@ -144,23 +146,102 @@ public class Jeu {
 				Point d = direction(p_1, p_2);
 				Point d1 = direction(p_1, p1);
 
-				System.out.println(" d : " + d);
-				System.out.println(" d1 : " + d1);
+				//System.out.println(" d : " + d);
+				//System.out.println(" d1 : " + d1);
 
 				d1 = new Point(arrondir(d1.x), arrondir(d1.y));
-				System.out.println(" new d1 : " + d1);
+				//System.out.println(" new d1 : " + d1);
 
 				if (d.x == d1.x && d.y == d1.y)
-					deplacer(p_1, d, 0);
+					res=deplacer3(p_1, d, 0);
 				else if (d.x == -d1.x && d.y == -d1.y)
-					deplacer(p_1, d, 1);
+					res=deplacer3(p_1, d, 1);
 				etape = 1;
 			}
-			c.ajouterPoint(p1);
+
 		}
+
+			if(!res.estVide())
+			pp.insereTete(res);
 		return etape;
 	}
-	int arrondir(int a) {
+
+	public SequenceListe<Point> deplacer2(Point p, Point d, int type) {
+		SequenceListe<Point> res=new SequenceListe<>();
+		if (joueur == 1) {
+			this.p.ajoutePion1(p.x + d.x, p.y + d.y);
+			this.p.videCase(p.x, p.y);
+			res.insereTete(p);
+			int i = 2;
+			if (type == 0)// par approche
+			{
+				while (interieure(p.x + d.x * i, p.y + d.y * i) && this.p.aPion2(p.x + d.x * i, p.y + d.y * i)) {
+					this.p.videCase(p.x + d.x * i, p.y + d.y * i);
+					res.insereTete(p);
+					i++;
+				}
+			} else// par eloignement
+			{
+				while (interieure(p.x - d.x * (i - 1), p.y - d.y * (i - 1))
+						&& this.p.aPion2(p.x - d.x * (i - 1), p.y - d.y * (i - 1))) {
+					this.p.videCase(p.x - d.x * (i - 1), p.y - d.y * (i - 1));
+					res.insereTete(p);
+					i++;
+				}
+			}
+		} else {
+			this.p.ajoutePion2(p.x + d.x, p.y + d.y);
+			this.p.videCase(p.x, p.y);
+			int i = 2;
+			if (type == 0)// par approche
+			{
+				while (interieure(p.x + d.x * i, p.y + d.y * i) && this.p.aPion1(p.x + d.x * i, p.y + d.y * i)) {
+					this.p.videCase(p.x + d.x * i, p.y + d.y * i);
+					i++;
+				}
+			} else// par eloignement
+			{
+				while (interieure(p.x - d.x * (i - 1), p.y - d.y * (i - 1))
+						&& this.p.aPion1(p.x - d.x * (i - 1), p.y - d.y * (i - 1))) {
+					this.p.videCase(p.x - d.x * (i - 1), p.y - d.y * (i - 1));
+					i++;
+				}
+			}
+		}
+		return null;
+	}
+
+	public SequenceListe<Point> deplacer3(Point p, Point d, int type) {
+
+		SequenceListe<Point> res=new SequenceListe<>();
+		int joueuradvs;
+		if(joueur==1)
+		joueuradvs=2;
+		else
+		joueuradvs=1;
+
+		this.p.ajoutePionX(joueur,p.x + d.x, p.y + d.y);
+		this.p.videCase(p.x, p.y);
+		int i = 2;
+		if (type == 0)// par approche
+		{
+			while (interieure(p.x + d.x * i, p.y + d.y * i) && this.p.aPionX(joueuradvs,p.x + d.x * i, p.y + d.y * i)) {
+				this.p.videCase(p.x + d.x * i, p.y + d.y * i);
+				res.insereTete(new Point(p.x + d.x * i, p.y + d.y * i));
+				i++;
+			}
+		} else{// par eloignement
+			while (interieure(p.x - d.x * (i - 1), p.y - d.y * (i - 1))
+					&& this.p.aPionX(joueuradvs,p.x - d.x * (i - 1), p.y - d.y * (i - 1))) {
+				this.p.videCase(p.x - d.x * (i - 1), p.y - d.y * (i - 1));
+				res.insereTete(new Point(p.x - d.x * (i - 1), p.y - d.y * (i - 1)));
+				i++;
+			}
+		}
+		return res;
+	}
+
+			int arrondir(int a) {
 		int b = 0;
 		if (a == 0)
 			b = 0;
@@ -187,6 +268,7 @@ public class Jeu {
 	}
 
 	public void deplacer(Point p, Point d, int type) {
+
 		if (joueur == 1) {
 			this.p.ajoutePion1(p.x + d.x, p.y + d.y);
 			this.p.videCase(p.x, p.y);
@@ -195,6 +277,7 @@ public class Jeu {
 			{
 				while (interieure(p.x + d.x * i, p.y + d.y * i) && this.p.aPion2(p.x + d.x * i, p.y + d.y * i)) {
 					this.p.videCase(p.x + d.x * i, p.y + d.y * i);
+
 					i++;
 				}
 			} else// par eloignement
@@ -347,7 +430,7 @@ public class Jeu {
 	}
 
 	public boolean interieure(int x, int y) {
-		return (x >= 0 && x < p.lignes()) && (y >= 0 && y <= p.colonnes());
+		return (x >= 0 && x < p.lignes()) && (y >= 0 && y < p.colonnes());
 	}
 
 	SequenceListe<SequenceListe<Point>> pionMangeurEloignement(int pionmangeur, int l, int c) {
@@ -486,7 +569,9 @@ public class Jeu {
 
 	public void annulerCoup(){
 		p=hi.annulerCoup();
-
+	}
+	public void retablirCoup(){
+		p= hi.retablirCoup();
 	}
 	/*
 	 * public void coup(Point p1, Point d ) { if( ( Math.abs(d.x) + Math.abs(d.y) )

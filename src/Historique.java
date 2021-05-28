@@ -1,4 +1,5 @@
 import java.awt.Point;
+import java.util.ArrayList;
 
 import Structures.Iterateur;
 import Structures.SequenceListe;
@@ -30,6 +31,7 @@ public class Historique  {
 	 
 	void ajouterConfiguration( Plateau c ) throws CloneNotSupportedException {
 		tete.insereTete( (Plateau) c.clone() );
+		System.out.println();
 		queue = new SequenceListe<Plateau>() ;
 	}
 	Plateau retablirCoup(){
@@ -48,6 +50,12 @@ public class Historique  {
 			return tete.sommet();
 		}
 			return null;
+	}
+	void afficherEve(){
+		Iterateur<Plateau> it= tete.iterateur();
+		while(it.aProchain()){
+			it.prochain().affiche();
+		}
 	}
 	
 }

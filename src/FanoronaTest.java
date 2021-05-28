@@ -31,10 +31,10 @@ public class FanoronaTest {
 				// j.jouer(new Point(x1,y1), new Point(x2,y2));
 
 				p1 = new Point(x1, y1);
-				System.out.println(" etape avant est : " + etape);
+				//System.out.println(" etape avant est : " + etape);
 				etape = j.jouercoup(p1, etape,c);
-				System.out.println(" etape apres est : " + etape);
-				System.out.println(" ma liste est : " + c.s);
+				//System.out.println(" etape apres est : " + etape);
+				//System.out.println(" ma liste est : " + c.s);
 
 				if (k == 1) {
 					j.affiche();
@@ -55,10 +55,14 @@ public class FanoronaTest {
 
 			etape = 0;
 			d = 0;
+
+			System.out.println("fin coup");
 			try {
 				j.hi.ajouterConfiguration(j.getPlateau().clone());
+				System.out.println("ajout d'une configuration dans l'historique");
 			} catch (CloneNotSupportedException e) {
 				e.printStackTrace();
+				System.out.println("exception");
 			}
 			j.changerJoueur();
 			System.out.println("tuepartie:");
@@ -66,8 +70,9 @@ public class FanoronaTest {
 		}
 		sc.close();
 		j.annulerCoup();
-		j.p.a
-
+		j.affiche();
+		j.retablirCoup();
+		j.affiche();
 	}
 
 }

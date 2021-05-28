@@ -3,13 +3,20 @@ import java.awt.Point;
 import Structures.Iterateur;
 import Structures.SequenceListe;
 
-public class Coup  {
+public class Coup implements Cloneable {
 	SequenceListe<Point> s;
+	SequenceListe<SequenceListe<Point>> pionspris;
 
 	Coup() {
 		s = new SequenceListe<>();
+		pionspris = new SequenceListe<SequenceListe<Point>>();
 	}
 
+	public Coup clone() throws CloneNotSupportedException {
+
+		return  (Coup)super.clone();
+
+	}
 
 	void videList() {
 		s = new SequenceListe<>();
