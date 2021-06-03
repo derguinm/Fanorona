@@ -1,10 +1,10 @@
+package Model;
+
 import java.util.Scanner;
 
 import Structures.SequenceListe;
 
 import java.awt.*;
-import Model.*;
-import Control.*;
 
 public class FanoronaTest {
 	public static void main(String[] args) {
