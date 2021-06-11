@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Fanorona-main:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Fanorona_main_jar</output-path>
+    <root id="archive" name="Fanorona-main.jar">
+      <element id="module-output" name="Fanorona-main" />
+    </root>
+  </artifact>
+</component>
